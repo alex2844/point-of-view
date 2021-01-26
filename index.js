@@ -25,6 +25,7 @@ function fastifyView (fastify, opts, next) {
   }
 
   const charset = opts.charset || 'utf-8'
+  const prefix = opts.prefix || 'view'
   const engine = opts.engine[type]
   const options = opts.options || {}
   const templatesDir = opts.root || resolve(opts.templates || './')
@@ -63,7 +64,7 @@ function fastifyView (fastify, opts, next) {
 
   const renderer = renders[type] ? renders[type] : renders._default
 
-  fastify.decorate('view', function () {
+  fastify.decorate(prefix, function () {
     const args = Array.from(arguments)
 
     let done
@@ -94,7 +95,7 @@ function fastifyView (fastify, opts, next) {
     return promise
   })
 
-  fastify.decorateReply('view', function () {
+  fastify.decorateReply(prefix, function () {
     renderer.apply(this, arguments)
     return this
   })
